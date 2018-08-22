@@ -1,0 +1,136 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+	</head>
+	<style type="text/css">
+		* {
+			margin: 0;
+			padding: 0;
+		}
+		/*body {
+			background-image: url('./img/bj.jpg');
+			background-size: cover;
+		}*/
+		header {
+			width: 100%;
+		}
+		.ball {
+			list-style: none;
+			width: 70px;
+			height: 70px;
+			border-radius: 50%;
+			background-color: #000000;
+            background: radial-gradient(circle at 25px 25px, #5cabff, #000);
+            z-index: 100;
+            position: absolute;
+		}
+		footer {
+			width: 300px;
+			height: 20px;
+			background-color: #000000;
+			background-image: url('./img/mu.png');
+			position: absolute;
+			left: 530px;
+			top: 500px;
+		}
+		.num {
+			position: absolute;
+			left: 140px;
+			top: -180px;
+			font-size: 50px;
+			color: red;
+			opacity: 0;
+			animation: run 0.3s;
+		}
+		
+		#over {
+			width: 100%;
+			margin-top: 200px;
+			text-align: center;
+		}	
+		.over {
+			font-size: 80px;
+			font-weight: 700;
+			transition: all 0.5s;
+		}
+			
+		@keyframes run {
+			0% {
+				top: 0px;
+				opacity: 0;
+			}
+			100% {
+				top: -180px;
+				opacity: 1;
+			}
+		
+		
+	</style>
+	<body>
+		<header></header>
+		<div id="over"></div>
+		<footer><div></div></footer>
+		<script type="text/javascript">
+			
+			let head=document.querySelector('header');
+			let foot=document.querySelector('footer');
+			let numdiv=foot.querySelector('div');
+			let over=document.querySelector('#over');
+			
+			let count=0; //接住小球的个数
+			let flag=true; 
+			function setInt(){
+				numdiv.classList.remove('num');
+				let ball=document.createElement('div');
+				ball.classList.add('ball');
+				let x=Math.round(Math.random()*1000+83);  //随机小球的left值
+				ball.style.left=x+'px';
+				head.appendChild(ball);
+				let y=0;
+				let running=function(){
+					y++;
+					ball.style.top=y+'px';
+					
+					if(flag==false){
+						return ;
+					}
+					
+					//球碰到木板
+					if((ball.getBoundingClientRect().top+ball.getBoundingClientRect().height==foot.getBoundingClientRect().top)&&((ball.getBoundingClientRect().left+ball.getBoundingClientRect().width+ball.getBoundingClientRect().width/2>=foot.getBoundingClientRect().left)&&(ball.getBoundingClientRect().left<=foot.getBoundingClientRect().left+foot.getBoundingClientRect().width))){
+						count++;
+						numdiv.innerText='+'+count;
+						numdiv.classList.add('num');
+						ball.remove();
+						return ;
+					}
+					//球小球超出窗口范围,即没有接住小球  游戏结束
+					if(ball.getBoundingClientRect().top>=window.innerHeight-20){
+						flag=false;
+						clearInterval(run);
+						clearInterval(set);
+						over.innerText='game over';
+						over.classList.add('over');
+					}
+				}
+				var run=setInterval(running,5);//球落下
+			}
+			
+			var set=setInterval(setInt,2000);//添加球
+			
+			//键盘事件
+			document.onkeydown=function(){
+				var e=event||window.event;
+				if(e&&e.keyCode=='39'&&foot.getBoundingClientRect().left<window.innerWidth-foot.getBoundingClientRect().width-20){
+					foot.style.left=foot.getBoundingClientRect().left+20+'px';
+				}
+				if(e&&e.keyCode=='37'&&foot.getBoundingClientRect().left>=0){
+					foot.style.left=foot.getBoundingClientRect().left-20+'px';
+				}
+			}
+			
+			
+		</script>
+	</body>
+</html>

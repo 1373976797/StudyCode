@@ -1,0 +1,82 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>贪吃蛇</title>
+    <style>
+        #ground {
+            background-color: #eee;
+            border: 1px solid #0f0;
+            width: 600px;
+            height: 600px;
+            position: relative;
+        }
+        .food{
+            position: absolute;
+            background-color: rgb(165, 77, 77);
+        }
+        .snake{
+            position: absolute;
+            background-color: rgb(189, 167, 189);
+        }
+        .header{
+            position: absolute;
+            background-color: rgb(155, 56, 155);
+            z-index: 999;
+        }
+    </style>
+</head>
+
+<body>
+   <div id="ground"></div>
+   <button class="start">开始</button>
+   <button class="pause">暂停</button>
+   <button class="continue">继续</button>
+
+   <script src="./js/food.js"></script>
+   <script src="./js/snake.js"></script>
+   <script>
+       window.onload = function () {
+        let food;
+        let snake
+          //点开始按钮
+          document.querySelector('.start').onclick = function () {
+            food = new Food('#ground'); 
+            snake = new Snake('#ground'); 
+            //给蛇一个食物
+            snake.foodObj = food;
+            // 把历史计时器暂停并清空游戏场地
+            snake.pause();
+            document.querySelector('#ground').innerHTML = '';
+            
+            //开始新的游戏
+            food.createFood();
+            snake.createSnake();
+            snake.run();
+          }
+          //暂停按钮
+          document.querySelector('.pause').onclick = function () {
+            snake.pause();
+          }
+          //继续
+          document.querySelector('.continue').onclick = function () {
+            snake.run();
+          }
+          window.onkeydown = function (e) {
+              let dirArr = [];
+              dirArr[37] = 1;
+              dirArr[38] = 2;
+              dirArr[39] = 3;
+              dirArr[40] = 4;
+              let code = e.keyCode;
+              //向左的时候不能向右  反之一样  判断语句：Math.abs(dirArr[code] - snake.direction) != 2
+              //向上的时候不能向下 反之一样 
+              //摁的键必须是指定的键  判断语句：dirArr[code]  要存在
+              snake.direction = (dirArr[code] && Math.abs(dirArr[code] - snake.direction) != 2) ? dirArr[code] : snake.direction;
+          }
+       }
+   </script>
+</body>
+</html>
